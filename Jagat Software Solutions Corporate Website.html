@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jagat Software Solutions | Enterprise Software & AI Engineering</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            navy: '#0B132B',
+                            slate: '#1C2541',
+                            blue: '#2563EB',
+                            indigo: '#4F46E5',
+                            light: '#F8FAFC'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased flex flex-col min-h-screen selection:bg-blue-600 selection:text-white">
+
+    <!-- Toast Notification Container (Replaces alert) -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- Sticky Navigation Header -->
+    <header class="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Brand Logo -->
+                <button onclick="navigateTo('home')" class="flex items-center gap-3 text-left group focus:outline-none">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white shadow-md shadow-blue-600/20 group-hover:scale-105 transition-transform">
+                        <i data-lucide="cpu" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <span class="block text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 leading-none">
+                            JAGAT
+                        </span>
+                        <span class="block text-xs font-semibold tracking-wider text-blue-600 uppercase mt-0.5">
+                            Software Solutions
+                        </span>
+                    </div>
+                </button>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-2" aria-label="Main Navigation">
+                    <button onclick="navigateTo('home')" data-nav="home" class="nav-link px-4 py-2.5 rounded-xl text-sm font-semibold transition-all">
+                        Home
+                    </button>
+                    <button onclick="navigateTo('about')" data-nav="about" class="nav-link px-4 py-2.5 rounded-xl text-sm font-semibold transition-all">
+                        About Us
+                    </button>
+                    <button onclick="navigateTo('services')" data-nav="services" class="nav-link px-4 py-2.5 rounded-xl text-sm font-semibold transition-all">
+                        Services
+                    </button>
+                    <button onclick="navigateTo('contact')" data-nav="contact" class="nav-link px-4 py-2.5 rounded-xl text-sm font-semibold transition-all">
+                        Contact Us
+                    </button>
+                </nav>
+
+                <!-- Desktop CTA Button -->
+                <div class="hidden md:flex items-center gap-3">
+                    <a href="tel:+918376856686" class="hidden lg:flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-blue-600 px-3 py-2 rounded-xl transition-colors">
+                        <i data-lucide="phone" class="w-4 h-4 text-blue-600"></i>
+                        <span>+91 8376856686</span>
+                    </a>
+                    <button onclick="navigateTo('contact')" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md shadow-blue-600/20 transition-all hover:-translate-y-0.5 active:translate-y-0">
+                        Get a Quote
+                    </button>
+                </div>
+
+                <!-- Mobile Hamburger Menu Button -->
+                <div class="flex items-center md:hidden">
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle Menu" class="p-2.5 rounded-xl text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <i id="menu-icon-open" data-lucide="menu" class="w-6 h-6"></i>
+                        <i id="menu-icon-close" data-lucide="x" class="w-6 h-6 hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-5 space-y-2 shadow-xl">
+            <button onclick="navigateTo('home'); toggleMobileMenu();" data-nav-mobile="home" class="mobile-nav-link w-full text-left block px-4 py-3 rounded-xl text-base font-semibold transition-colors">
+                Home
+            </button>
+            <button onclick="navigateTo('about'); toggleMobileMenu();" data-nav-mobile="about" class="mobile-nav-link w-full text-left block px-4 py-3 rounded-xl text-base font-semibold transition-colors">
+                About Us
+            </button>
+            <button onclick="navigateTo('services'); toggleMobileMenu();" data-nav-mobile="services" class="mobile-nav-link w-full text-left block px-4 py-3 rounded-xl text-base font-semibold transition-colors">
+                Services
+            </button>
+            <button onclick="navigateTo('contact'); toggleMobileMenu();" data-nav-mobile="contact" class="mobile-nav-link w-full text-left block px-4 py-3 rounded-xl text-base font-semibold transition-colors">
+                Contact Us
+            </button>
+            <div class="pt-3 border-t border-slate-100 flex flex-col gap-2">
+                <a href="tel:+918376856686" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-slate-100 text-slate-800 font-semibold text-sm">
+                    <i data-lucide="phone" class="w-4 h-4 text-blue-600"></i>
+                    Call +91 8376856686
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Single-Page Application Content Container -->
+    <main class="flex-grow">
+
+        <!-- ========================================================= -->
+        <!-- 1. HOME PAGE VIEW                                         -->
+        <!-- ========================================================= -->
+        <section id="view-home" class="page-view">
+            <!-- Hero Banner -->
+            <div class="relative overflow-hidden bg-slate-900 text-white">
+                <!-- Subtle Geometric Background Accents -->
+                <div class="absolute inset-0 opacity-20 pointer-events-none">
+                    <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-blue-600 blur-3xl"></div>
+                    <div class="absolute bottom-0 left-10 w-80 h-80 rounded-full bg-indigo-600 blur-3xl"></div>
+                </div>
+
+                <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                        <div class="lg:col-span-7 space-y-6">
+                            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-300 text-xs sm:text-sm font-medium">
+                                <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                                Enterprise Software & Digital Transformation Partner
+                            </div>
+                            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+                                Engineering Scalable Software & <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">Intelligent AI</span> Solutions
+                            </h1>
+                            <p class="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
+                                Jagat Software Solutions empowers ambitious businesses with resilient cloud architectures, high-throughput microservices, and custom conversational AI built for measurable growth.
+                            </p>
+                            <div class="flex flex-wrap items-center gap-4 pt-2">
+                                <button onclick="navigateTo('services')" class="px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm sm:text-base shadow-lg shadow-blue-600/30 transition-all flex items-center gap-2">
+                                    <span>Explore Our Services</span>
+                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="navigateTo('contact')" class="px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 text-white font-semibold text-sm sm:text-base transition-all">
+                                    Schedule Consultation
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right Hero Architecture Card -->
+                        <div class="lg:col-span-5">
+                            <div class="bg-slate-800/80 backdrop-blur-md border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+                                <div class="flex items-center justify-between border-b border-slate-700 pb-4">
+                                    <div>
+                                        <p class="text-xs font-semibold uppercase tracking-wider text-blue-400">Core Technology Stack</p>
+                                        <h3 class="text-lg font-bold text-white mt-0.5">Enterprise Architecture</h3>
+                                    </div>
+                                    <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center">
+                                        <i data-lucide="layers" class="w-5 h-5"></i>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-700/60">
+                                        <div class="flex items-center gap-2.5 text-blue-400 font-semibold text-sm mb-1.5">
+                                            <i data-lucide="server" class="w-4 h-4"></i>
+                                            <span>Java & Spring Boot</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">Mission-critical backend APIs & fault-tolerant enterprise systems.</p>
+                                    </div>
+                                    <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-700/60">
+                                        <div class="flex items-center gap-2.5 text-indigo-400 font-semibold text-sm mb-1.5">
+                                            <i data-lucide="cloud" class="w-4 h-4"></i>
+                                            <span>Cloud Native</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">Auto-scaling AWS/Azure deployments, Docker & Kubernetes.</p>
+                                    </div>
+                                    <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-700/60">
+                                        <div class="flex items-center gap-2.5 text-emerald-400 font-semibold text-sm mb-1.5">
+                                            <i data-lucide="git-branch" class="w-4 h-4"></i>
+                                            <span>Microservices</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">Decoupled, event-driven architectures for rapid agility.</p>
+                                    </div>
+                                    <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-700/60">
+                                        <div class="flex items-center gap-2.5 text-purple-400 font-semibold text-sm mb-1.5">
+                                            <i data-lucide="bot" class="w-4 h-4"></i>
+                                            <span>Applied AI & LLMs</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 leading-relaxed">Intelligent chatbots, RAG pipelines & workflow automation.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Core Expertise Strip -->
+            <div class="bg-white border-b border-slate-200 py-14">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-3xl mx-auto mb-12">
+                        <span class="text-xs font-bold uppercase tracking-widest text-blue-600">Why Choose Jagat</span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-2">Built for Reliability, Speed & Scale</h2>
+                        <p class="text-slate-600 mt-3 text-sm sm:text-base">
+                            We combine deep backend engineering rigor with modern AI capabilities to deliver software that outperforms industry benchmarks.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-blue-300 transition-all">
+                            <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mb-4">
+                                <i data-lucide="shield-check" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900">Enterprise-Grade Security</h3>
+                            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                                End-to-end encryption, OAuth2/JWT identity management, and strict compliance standards baked into every sprint.
+                            </p>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-blue-300 transition-all">
+                            <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-4">
+                                <i data-lucide="zap" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900">High-Throughput Performance</h3>
+                            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                                Engineered using Java, Spring Boot, and distributed caching to handle millions of concurrent transactions effortlessly.
+                            </p>
+                        </div>
+                        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-blue-300 transition-all">
+                            <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center mb-4">
+                                <i data-lucide="sparkles" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900">AI-First Innovation</h3>
+                            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                                Seamless integration of custom LLM assistants and predictive analytics into your existing business workflows.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Industries Highlight Section -->
+            <div class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-widest text-blue-600">Domain Expertise</span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">Industries We Transform</h2>
+                    </div>
+                    <button onclick="navigateTo('services')" class="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700">
+                        <span>View Detailed Solutions</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+                    <button onclick="openServiceDetail('Finance')" class="group text-left p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-400 transition-all">
+                        <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center transition-colors mb-4">
+                            <i data-lucide="landmark" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base">Finance</h3>
+                        <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">Fintech platforms, payment gateways & core banking APIs.</p>
+                    </button>
+
+                    <button onclick="openServiceDetail('Retail')" class="group text-left p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-400 transition-all">
+                        <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white flex items-center justify-center transition-colors mb-4">
+                            <i data-lucide="store" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base">Retail</h3>
+                        <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">Smart POS integrations, inventory & omnichannel analytics.</p>
+                    </button>
+
+                    <button onclick="openServiceDetail('Telecom')" class="group text-left p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-400 transition-all">
+                        <div class="w-11 h-11 rounded-xl bg-cyan-50 text-cyan-600 group-hover:bg-cyan-600 group-hover:text-white flex items-center justify-center transition-colors mb-4">
+                            <i data-lucide="radio-tower" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base">Telecom</h3>
+                        <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">OSS/BSS platforms, messaging & network telemetry.</p>
+                    </button>
+
+                    <button onclick="openServiceDetail('E-Commerce')" class="group text-left p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-400 transition-all">
+                        <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white flex items-center justify-center transition-colors mb-4">
+                            <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base">E-Commerce</h3>
+                        <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">Custom storefronts, order engines & logistics automation.</p>
+                    </button>
+
+                    <button onclick="openServiceDetail('AI Chatbot')" class="group text-left p-6 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-400 transition-all">
+                        <div class="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 group-hover:bg-purple-600 group-hover:text-white flex items-center justify-center transition-colors mb-4">
+                            <i data-lucide="message-square-bot" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base">AI Chatbot</h3>
+                        <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">Conversational LLM agents & 24/7 automated support.</p>
+                    </button>
+                </div>
+
+                <!-- Bottom CTA Banner -->
+                <div class="mt-16 rounded-3xl bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 p-8 sm:p-12 text-white flex flex-col lg:flex-row items-center justify-between gap-8 shadow-xl">
+                    <div class="space-y-2 text-center lg:text-left">
+                        <h3 class="text-2xl sm:text-3xl font-bold">Ready to Accelerate Your Digital Roadmap?</h3>
+                        <p class="text-slate-300 text-sm sm:text-base max-w-2xl">
+                            Connect with our engineering architects today to discuss your software, cloud, or AI automation goals.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-4 shrink-0">
+                        <button onclick="navigateTo('contact')" class="px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm shadow-lg transition-all">
+                            Request a Free Quote
+                        </button>
+                        <a href="tel:+918376856686" class="px-6 py-3.5 rounded-xl bg-white text-slate-900 hover:bg-slate-100 font-semibold text-sm transition-all flex items-center gap-2">
+                            <i data-lucide="phone-call" class="w-4 h-4 text-blue-600"></i>
+                            <span>+91 8376856686</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 2. ABOUT US PAGE VIEW                                     -->
+        <!-- ========================================================= -->
+        <section id="view-about" class="page-view hidden">
+            <!-- Header Banner -->
+            <div class="bg-slate-900 text-white py-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <span class="text-xs font-bold uppercase tracking-widest text-blue-400">Who We Are</span>
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold mt-2">Engineering-First Software Excellence</h1>
+                    <p class="text-slate-300 mt-4 max-w-3xl text-base sm:text-lg leading-relaxed">
+                        At Jagat Software Solutions, we bridge complex enterprise challenges with clean, resilient, and future-proof software engineering.
+                    </p>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
+                <!-- Vision & Mission Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center mb-5">
+                            <i data-lucide="eye" class="w-6 h-6"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-slate-900">Our Vision</h2>
+                        <p class="text-slate-600 mt-3 leading-relaxed">
+                            To be a trusted global technology partner recognized for architecting high-reliability enterprise platforms and intelligent AI solutions that empower organizations to scale without limits.
+                        </p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center mb-5">
+                            <i data-lucide="target" class="w-6 h-6"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-slate-900">Our Mission</h2>
+                        <p class="text-slate-600 mt-3 leading-relaxed">
+                            To deliver measurable business value through disciplined agile execution, modern microservices engineering, and ethical artificial intelligence—turning ambitious ideas into production-grade reality.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Culture & Engineering Pillars -->
+                <div class="bg-white rounded-3xl border border-slate-200 p-8 sm:p-12 shadow-sm">
+                    <div class="max-w-3xl mb-10">
+                        <span class="text-xs font-bold uppercase tracking-widest text-blue-600">Our DNA</span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">An Engineering-First Culture</h2>
+                        <p class="text-slate-600 mt-3">
+                            Every solution we build is anchored by three foundational engineering principles that guarantee long-term maintainability and business continuity.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3">
+                                <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 font-bold text-sm flex items-center justify-center">01</span>
+                                <h3 class="text-lg font-bold text-slate-900">Technical Excellence</h3>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                Clean code practices, automated CI/CD pipelines, comprehensive unit/integration testing, and rigorous peer code reviews ensure zero-compromise quality.
+                            </p>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3">
+                                <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 font-bold text-sm flex items-center justify-center">02</span>
+                                <h3 class="text-lg font-bold text-slate-900">Agile & Transparent Delivery</h3>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                Iterative sprints, continuous stakeholder demos, and clear milestone tracking keep you in complete control from initial discovery to production launch.
+                            </p>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3">
+                                <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 font-bold text-sm flex items-center justify-center">03</span>
+                                <h3 class="text-lg font-bold text-slate-900">Scalable Architecture</h3>
+                            </div>
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                Whether launching an MVP or modernizing legacy monoliths, our cloud-native microservices scale horizontally to meet peak demand seamlessly.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Local Roots & Global Reach -->
+                <div class="bg-slate-900 text-white rounded-3xl p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div class="space-y-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-blue-400">Headquartered in Jharkhand, Serving Everywhere</span>
+                        <h3 class="text-2xl font-bold">Partner With Jagat Software Solutions</h3>
+                        <p class="text-slate-300 text-sm max-w-xl">
+                            Visit our office at Bypass Road, Opposite KB High School Ground, Dumri, or collaborate remotely with our dedicated engineering team.
+                        </p>
+                    </div>
+                    <button onclick="navigateTo('contact')" class="px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm shrink-0 transition-all">
+                        Get in Touch
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 3. SERVICES PAGE VIEW                                     -->
+        <!-- ========================================================= -->
+        <section id="view-services" class="page-view hidden">
+            <!-- Header Banner -->
+            <div class="bg-slate-900 text-white py-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <span class="text-xs font-bold uppercase tracking-widest text-blue-400">Enterprise Capabilities</span>
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold mt-2">Specialized Industry & AI Services</h1>
+                    <p class="text-slate-300 mt-4 max-w-3xl text-base sm:text-lg leading-relaxed">
+                        Explore our tailored software solutions across five high-impact verticals. Select a vertical tab below or browse all capabilities.
+                    </p>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+                <!-- Interactive Vertical Filter Tabs -->
+                <div class="flex flex-wrap gap-2.5 pb-8 border-b border-slate-200" role="tablist" aria-label="Service Verticals">
+                    <button onclick="filterServiceTab('All')" data-service-tab="All" class="service-tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition-all">
+                        All Verticals (5)
+                    </button>
+                    <button onclick="filterServiceTab('Finance')" data-service-tab="Finance" class="service-tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition-all">
+                        Finance
+                    </button>
+                    <button onclick="filterServiceTab('Retail')" data-service-tab="Retail" class="service-tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition-all">
+                        Retail
+                    </button>
+                    <button onclick="filterServiceTab('Telecom')" data-service-tab="Telecom" class="service-tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition-all">
+                        Telecom
+                    </button>
+                    <button onclick="filterServiceTab('E-Commerce')" data-service-tab="E-Commerce" class="service-tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition-all">
+                        E-Commerce
+                    </button>
+                    <button onclick="filterServiceTab('AI Chatbot')" data-service-tab="AI Chatbot" class="service-tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition-all">
+                        AI Chatbot
+                    </button>
+                </div>
+
+                <!-- Dynamic Services Grid Container -->
+                <div id="services-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10">
+                    <!-- Populated via JavaScript for clean state management -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 4. CONTACT US PAGE VIEW                                   -->
+        <!-- ========================================================= -->
+        <section id="view-contact" class="page-view hidden">
+            <!-- Header Banner -->
+            <div class="bg-slate-900 text-white py-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <span class="text-xs font-bold uppercase tracking-widest text-blue-400">Let's Build Together</span>
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold mt-2">Contact Jagat Software Solutions</h1>
+                    <p class="text-slate-300 mt-4 max-w-2xl text-base sm:text-lg leading-relaxed">
+                        Have a project in mind or need technical consultation? Reach out directly or submit an inquiry below.
+                    </p>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                    <!-- Left Column: Direct Contact Cards -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <div class="bg-white p-7 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">Direct Contact Information</h2>
+                                <p class="text-sm text-slate-500 mt-1">Our team responds to all business inquiries within 24 hours.</p>
+                            </div>
+
+                            <!-- Phone -->
+                            <div class="flex items-start gap-4">
+                                <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                                    <i data-lucide="phone" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Mobile / WhatsApp</p>
+                                    <a href="tel:+918376856686" class="text-base font-bold text-slate-900 hover:text-blue-600 transition-colors mt-0.5 inline-block">
+                                        +91 8376856686
+                                    </a>
+                                    <p class="text-xs text-slate-500 mt-0.5">Mon – Sat, 9:00 AM – 7:00 PM IST</p>
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="flex items-start gap-4">
+                                <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                                    <i data-lucide="mail" class="w-5 h-5"></i>
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Email Address</p>
+                                    <a href="mailto:ravioecdumri@gmail.com" class="text-base font-bold text-slate-900 hover:text-blue-600 transition-colors mt-0.5 inline-block break-all">
+                                        ravioecdumri@gmail.com
+                                    </a>
+                                    <p class="text-xs text-slate-500 mt-0.5">For RFPs, quotes & technical support</p>
+                                </div>
+                            </div>
+
+                            <!-- Office Address -->
+                            <div class="flex items-start gap-4">
+                                <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                                    <i data-lucide="map-pin" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Office Location</p>
+                                    <p class="text-base font-bold text-slate-900 mt-0.5 leading-snug">
+                                        Bypass Road, Opposite KB High School Ground
+                                    </p>
+                                    <p class="text-sm text-slate-600 mt-0.5">Dumri, Jharkhand, India</p>
+                                </div>
+                            </div>
+
+                            <!-- Copy Details Quick Action -->
+                            <div class="pt-4 border-t border-slate-100">
+                                <button type="button" onclick="copyContactDetails()" class="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-colors">
+                                    <i data-lucide="copy" class="w-4 h-4"></i>
+                                    <span>Copy Contact Details</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Interactive Inquiry Form -->
+                    <div class="lg:col-span-7">
+                        <div class="bg-white p-7 sm:p-10 rounded-2xl border border-slate-200 shadow-sm">
+                            <h2 class="text-2xl font-bold text-slate-900">Send Us a Project Inquiry</h2>
+                            <p class="text-sm text-slate-500 mt-1">Fill out the form below and we will get back to you with a tailored consultation plan.</p>
+
+                            <!-- Confirmation Banner (Shown on successful submission) -->
+                            <div id="form-success-banner" class="hidden mt-6 p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900">
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="check-circle-2" class="w-6 h-6 text-emerald-600 shrink-0 mt-0.5"></i>
+                                    <div>
+                                        <h3 class="font-bold text-base">Inquiry Submitted Successfully!</h3>
+                                        <p id="form-success-text" class="text-sm text-emerald-800 mt-1"></p>
+                                        <button type="button" onclick="resetInquiryForm()" class="mt-3 text-xs font-bold uppercase tracking-wider text-emerald-700 hover:text-emerald-900 underline">
+                                            Send Another Inquiry
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <form id="inquiry-form" onsubmit="handleInquirySubmit(event)" novalidate class="mt-6 space-y-5">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                    <!-- Full Name -->
+                                    <div>
+                                        <label for="input-name" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                                            Full Name <span class="text-red-500">*</span>
+                                        </label>
+                                        <input type="text" id="input-name" name="name" required placeholder="e.g., Ravi Kumar"
+                                            class="w-full px-4 py-3 rounded-xl border border-slate-300 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                                        <p id="error-name" class="hidden text-xs text-red-600 mt-1 font-medium">Please enter your full name.</p>
+                                    </div>
+
+                                    <!-- Phone Number -->
+                                    <div>
+                                        <label for="input-phone" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                                            Phone Number <span class="text-red-500">*</span>
+                                        </label>
+                                        <input type="tel" id="input-phone" name="phone" required placeholder="e.g., +91 9876543210"
+                                            class="w-full px-4 py-3 rounded-xl border border-slate-300 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                                        <p id="error-phone" class="hidden text-xs text-red-600 mt-1 font-medium">Please enter a valid phone number.</p>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                    <!-- Email Address -->
+                                    <div>
+                                        <label for="input-email" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                                            Work Email <span class="text-red-500">*</span>
+                                        </label>
+                                        <input type="email" id="input-email" name="email" required placeholder="you@company.com"
+                                            class="w-full px-4 py-3 rounded-xl border border-slate-300 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                                        <p id="error-email" class="hidden text-xs text-red-600 mt-1 font-medium">Please enter a valid email address.</p>
+                                    </div>
+
+                                    <!-- Service Interest Dropdown -->
+                                    <div>
+                                        <label for="input-service" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                                            Service Interest <span class="text-red-500">*</span>
+                                        </label>
+                                        <select id="input-service" name="service"
+                                            class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                                            <option value="Finance">Finance (Fintech & Banking APIs)</option>
+                                            <option value="Retail">Retail (POS & Omnichannel)</option>
+                                            <option value="Telecom">Telecom (OSS/BSS & Messaging)</option>
+                                            <option value="E-Commerce">E-Commerce (Storefronts & Logistics)</option>
+                                            <option value="AI Chatbot">AI Chatbot (LLM & Support Automation)</option>
+                                            <option value="Custom Enterprise Software">Custom Enterprise Software / Cloud</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Project Details / Message -->
+                                <div>
+                                    <label for="input-message" class="block text-sm font-semibold text-slate-700 mb-1.5">
+                                        Project Requirements <span class="text-red-500">*</span>
+                                    </label>
+                                    <textarea id="input-message" name="message" rows="4" required placeholder="Tell us about your project timeline, goals, or technical challenges..."
+                                        class="w-full px-4 py-3 rounded-xl border border-slate-300 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"></textarea>
+                                    <p id="error-message" class="hidden text-xs text-red-600 mt-1 font-medium">Please provide a brief description of your requirements.</p>
+                                </div>
+
+                                <button type="submit" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-lg shadow-blue-600/25 transition-all flex items-center justify-center gap-2">
+                                    <span>Submit Inquiry</span>
+                                    <i data-lucide="send" class="w-4 h-4"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Corporate Footer -->
+    <footer class="bg-slate-950 text-slate-300 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
+                <!-- Company Overview -->
+                <div class="lg:col-span-4 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white">
+                            <i data-lucide="cpu" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <span class="block text-lg font-extrabold text-white leading-none">JAGAT</span>
+                            <span class="block text-xs font-semibold tracking-wider text-blue-400 uppercase mt-0.5">Software Solutions</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Delivering enterprise-grade software engineering, cloud microservices, and custom AI automation for modern businesses across Finance, Retail, Telecom, and E-Commerce.
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="lg:col-span-2 space-y-3">
+                    <h4 class="text-sm font-bold uppercase tracking-wider text-white">Company</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><button onclick="navigateTo('home')" class="hover:text-blue-400 transition-colors">Home</button></li>
+                        <li><button onclick="navigateTo('about')" class="hover:text-blue-400 transition-colors">About Us</button></li>
+                        <li><button onclick="navigateTo('services')" class="hover:text-blue-400 transition-colors">Services</button></li>
+                        <li><button onclick="navigateTo('contact')" class="hover:text-blue-400 transition-colors">Contact Us</button></li>
+                    </ul>
+                </div>
+
+                <!-- Solutions Links -->
+                <div class="lg:col-span-3 space-y-3">
+                    <h4 class="text-sm font-bold uppercase tracking-wider text-white">Verticals</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><button onclick="openServiceDetail('Finance')" class="hover:text-blue-400 transition-colors">Finance & Fintech</button></li>
+                        <li><button onclick="openServiceDetail('Retail')" class="hover:text-blue-400 transition-colors">Retail & POS Systems</button></li>
+                        <li><button onclick="openServiceDetail('Telecom')" class="hover:text-blue-400 transition-colors">Telecom OSS/BSS</button></li>
+                        <li><button onclick="openServiceDetail('E-Commerce')" class="hover:text-blue-400 transition-colors">E-Commerce Platforms</button></li>
+                        <li><button onclick="openServiceDetail('AI Chatbot')" class="hover:text-blue-400 transition-colors">AI Chatbot & LLMs</button></li>
+                    </ul>
+                </div>
+
+                <!-- Direct Contact Details -->
+                <div class="lg:col-span-3 space-y-3">
+                    <h4 class="text-sm font-bold uppercase tracking-wider text-white">Contact Us</h4>
+                    <ul class="space-y-3 text-sm text-slate-400">
+                        <li class="flex items-start gap-2.5">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-blue-400 shrink-0 mt-1"></i>
+                            <span>Bypass Road, Opposite KB High School Ground, Dumri, Jharkhand</span>
+                        </li>
+                        <li class="flex items-center gap-2.5">
+                            <i data-lucide="phone" class="w-4 h-4 text-blue-400 shrink-0"></i>
+                            <a href="tel:+918376856686" class="hover:text-white transition-colors">+91 8376856686</a>
+                        </li>
+                        <li class="flex items-center gap-2.5">
+                            <i data-lucide="mail" class="w-4 h-4 text-blue-400 shrink-0"></i>
+                            <a href="mailto:ravioecdumri@gmail.com" class="hover:text-white transition-colors break-all">ravioecdumri@gmail.com</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-800/80 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+                <p>&copy; <span id="current-year">2026</span> Jagat Software Solutions. All rights reserved.</p>
+                <p>Built with Engineering Precision &bull; Dumri, Jharkhand</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Application Logic & Interactive State -->
+    <script>
+        // Structured Data for the 5 Core Service Verticals
+        const SERVICES_DATA = [
+            {
+                id: 'Finance',
+                title: 'Finance & Fintech Solutions',
+                tagline: 'Secure, compliant, high-frequency financial software',
+                icon: 'landmark',
+                accentBg: 'bg-blue-50 text-blue-600',
+                description: 'We architect resilient financial platforms, real-time payment processing engines, and open-banking API ecosystems built on Spring Boot and cloud-native security standards.',
+                capabilities: [
+                    'Payment Gateway & UPI / NEFT / IMPS API Integrations',
+                    'Core Banking Microservices & Ledger Reconciliation',
+                    'KYC/AML Automation & Fraud Detection Workflows',
+                    'PCI-DSS & ISO 27001 Aligned Security Architecture'
+                ]
+            },
+            {
+                id: 'Retail',
+                title: 'Retail & Omnichannel Systems',
+                tagline: 'Unified store operations & real-time inventory intelligence',
+                icon: 'store',
+                accentBg: 'bg-indigo-50 text-indigo-600',
+                description: 'Bridge physical storefronts and digital channels with cloud-synchronized Point of Sale (POS) software, automated stock replenishment, and customer loyalty analytics.',
+                capabilities: [
+                    'Cloud POS Integrations & Multi-Store Billing',
+                    'Real-Time Inventory & Warehouse Synchronization',
+                    'Customer Loyalty Programs & CRM Automation',
+                    'Omnichannel Sales & Demand Forecasting Dashboards'
+                ]
+            },
+            {
+                id: 'Telecom',
+                title: 'Telecom OSS/BSS & Messaging',
+                tagline: 'Carrier-grade throughput & network intelligence',
+                icon: 'radio-tower',
+                accentBg: 'bg-cyan-50 text-cyan-600',
+                description: 'Engineered for ultra-low latency and high availability, our telecom software streamlines subscriber billing, bulk messaging gateways, and real-time network telemetry.',
+                capabilities: [
+                    'OSS/BSS Provisioning & Automated Billing Engines',
+                    'High-Throughput SMS, RCS & WhatsApp Messaging APIs',
+                    'Real-Time Network Performance & Fault Analytics',
+                    'Self-Service Subscriber Portals & Plan Management'
+                ]
+            },
+            {
+                id: 'E-Commerce',
+                title: 'E-Commerce & Digital Storefronts',
+                tagline: 'Conversion-focused storefronts & scalable order backends',
+                icon: 'shopping-cart',
+                accentBg: 'bg-emerald-50 text-emerald-600',
+                description: 'Launch fast, mobile-first B2B and B2C marketplaces powered by modular microservices that handle flash-sale traffic spikes, multi-vendor catalogs, and last-mile logistics.',
+                capabilities: [
+                    'Custom Headless Storefronts & Progressive Web Apps',
+                    'Scalable Cart, Checkout & Order Management Systems',
+                    'Automated Courier & Last-Mile Logistics Tracking',
+                    'Multi-Vendor Marketplace & Commission Engines'
+                ]
+            },
+            {
+                id: 'AI Chatbot',
+                title: 'AI Chatbot & Conversational Agents',
+                tagline: 'Intelligent LLM assistants trained on your business data',
+                icon: 'message-square-bot',
+                accentBg: 'bg-purple-50 text-purple-600',
+                description: 'Transform customer support and internal operations with context-aware AI chatbots powered by modern Large Language Models (LLMs) and Retrieval-Augmented Generation (RAG).',
+                capabilities: [
+                    'Custom LLM Assistants Trained on Company Knowledge Bases',
+                    '24/7 Automated Customer Support & Lead Qualification',
+                    'Omnichannel Deployment (Web, WhatsApp, Mobile Apps)',
+                    'CRM & Ticketing System Webhook Integrations'
+                ]
+            }
+        ];
+
+        // Current SPA State
+        let currentRoute = 'home';
+        let activeServiceFilter = 'All';
+
+        // Navigate between SPA Views ('home', 'about', 'services', 'contact')
+        function navigateTo(route) {
+            currentRoute = route;
+
+            // Toggle View Visibility
+            document.querySelectorAll('.page-view').forEach(section => {
+                section.classList.add('hidden');
+            });
+            const activeSection = document.getElementById(`view-${route}`);
+            if (activeSection) {
+                activeSection.classList.remove('hidden');
+            }
+
+            // Update Desktop Active Nav Styling
+            document.querySelectorAll('.nav-link').forEach(btn => {
+                if (btn.dataset.nav === route) {
+                    btn.classList.add('bg-blue-50', 'text-blue-700');
+                    btn.classList.remove('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100');
+                } else {
+                    btn.classList.remove('bg-blue-50', 'text-blue-700');
+                    btn.classList.add('text-slate-600', 'hover:text-slate-900', 'hover:bg-slate-100');
+                }
+            });
+
+            // Update Mobile Active Nav Styling
+            document.querySelectorAll('.mobile-nav-link').forEach(btn => {
+                if (btn.dataset.navMobile === route) {
+                    btn.classList.add('bg-blue-50', 'text-blue-700');
+                    btn.classList.remove('text-slate-700', 'hover:bg-slate-50');
+                } else {
+                    btn.classList.remove('bg-blue-50', 'text-blue-700');
+                    btn.classList.add('text-slate-700', 'hover:bg-slate-50');
+                }
+            });
+
+            // Smooth scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Toggle Mobile Hamburger Menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const openIcon = document.getElementById('menu-icon-open');
+            const closeIcon = document.getElementById('menu-icon-close');
+
+            const isHidden = menu.classList.contains('hidden');
+            if (isHidden) {
+                menu.classList.remove('hidden');
+                openIcon.classList.add('hidden');
+                closeIcon.classList.remove('hidden');
+            } else {
+                menu.classList.add('hidden');
+                openIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            }
+        }
+
+        // Open Services Page filtered to a specific vertical
+        function openServiceDetail(serviceId) {
+            navigateTo('services');
+            filterServiceTab(serviceId);
+        }
+
+        // Filter and Render Service Vertical Cards
+        function filterServiceTab(tabId) {
+            activeServiceFilter = tabId;
+
+            // Update Tab Button Styles
+            document.querySelectorAll('.service-tab-btn').forEach(btn => {
+                if (btn.dataset.serviceTab === tabId) {
+                    btn.classList.add('bg-blue-600', 'text-white', 'shadow-sm');
+                    btn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-200', 'hover:bg-slate-50');
+                } else {
+                    btn.classList.remove('bg-blue-600', 'text-white', 'shadow-sm');
+                    btn.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200', 'hover:bg-slate-50');
+                }
+            });
+
+            // Filter Data
+            const filteredServices = tabId === 'All'
+                ? SERVICES_DATA
+                : SERVICES_DATA.filter(s => s.id === tabId);
+
+            // Render Cards
+            const grid = document.getElementById('services-grid');
+            grid.innerHTML = filteredServices.map(service => `
+                <article class="bg-white rounded-2xl border border-slate-200 p-7 sm:p-8 shadow-sm hover:shadow-md transition-all flex flex-col justify-between ${filteredServices.length === 1 ? 'lg:col-span-2' : ''}">
+                    <div>
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="w-12 h-12 rounded-xl ${service.accentBg} flex items-center justify-center shrink-0">
+                                <i data-lucide="${service.icon}" class="w-6 h-6"></i>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold">
+                                ${service.id} Vertical
+                            </span>
+                        </div>
+
+                        <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mt-5">${service.title}</h2>
+                        <p class="text-xs font-semibold text-blue-600 mt-1">${service.tagline}</p>
+                        <p class="text-sm text-slate-600 mt-3 leading-relaxed">
+                            ${service.description}
+                        </p>
+
+                        <div class="mt-6 pt-5 border-t border-slate-100">
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Key Deliverables & Architecture</p>
+                            <ul class="space-y-2.5">
+                                ${service.capabilities.map(item => `
+                                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
+                                        <i data-lucide="check-circle-2" class="w-4 h-4 text-blue-600 shrink-0 mt-0.5"></i>
+                                        <span>${item}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
+                        <button onclick="requestServiceConsultation('${service.id}')" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-sm transition-all flex items-center justify-center gap-2">
+                            <span>Request Consultation</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                        <a href="tel:+918376856686" class="text-xs font-semibold text-slate-500 hover:text-blue-600 transition-colors">
+                            Or call +91 8376856686
+                        </a>
+                    </div>
+                </article>
+            `).join('');
+
+            // Re-initialize Lucide icons for newly injected DOM nodes
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        }
+
+        // Pre-select Service in Contact Form and Navigate to Contact Page
+        function requestServiceConsultation(serviceName) {
+            navigateTo('contact');
+            const serviceSelect = document.getElementById('input-service');
+            if (serviceSelect) {
+                serviceSelect.value = serviceName;
+                // Subtle highlight feedback on select dropdown
+                serviceSelect.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50/40');
+                setTimeout(() => {
+                    serviceSelect.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50/40');
+                }, 1500);
+            }
+            showToast(`Selected "${serviceName}" for consultation.`, 'info');
+        }
+
+        // Contact Form Validation & Submission Handler
+        function handleInquirySubmit(event) {
+            event.preventDefault();
+
+            const nameInput = document.getElementById('input-name');
+            const phoneInput = document.getElementById('input-phone');
+            const emailInput = document.getElementById('input-email');
+            const serviceInput = document.getElementById('input-service');
+            const messageInput = document.getElementById('input-message');
+
+            const nameError = document.getElementById('error-name');
+            const phoneError = document.getElementById('error-phone');
+            const emailError = document.getElementById('error-email');
+            const messageError = document.getElementById('error-message');
+
+            let isValid = true;
+
+            // Validate Name
+            if (!nameInput.value.trim() || nameInput.value.trim().length < 2) {
+                nameError.classList.remove('hidden');
+                nameInput.classList.add('border-red-500');
+                isValid = false;
+            } else {
+                nameError.classList.add('hidden');
+                nameInput.classList.remove('border-red-500');
+            }
+
+            // Validate Phone (at least 10 digits)
+            const digitsOnly = phoneInput.value.replace(/\D/g, '');
+            if (digitsOnly.length < 10) {
+                phoneError.classList.remove('hidden');
+                phoneInput.classList.add('border-red-500');
+                isValid = false;
+            } else {
+                phoneError.classList.add('hidden');
+                phoneInput.classList.remove('border-red-500');
+            }
+
+            // Validate Email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput.value.trim())) {
+                emailError.classList.remove('hidden');
+                emailInput.classList.add('border-red-500');
+                isValid = false;
+            } else {
+                emailError.classList.add('hidden');
+                emailInput.classList.remove('border-red-500');
+            }
+
+            // Validate Message
+            if (!messageInput.value.trim() || messageInput.value.trim().length < 10) {
+                messageError.classList.remove('hidden');
+                messageInput.classList.add('border-red-500');
+                isValid = false;
+            } else {
+                messageError.classList.add('hidden');
+                messageInput.classList.remove('border-red-500');
+            }
+
+            if (!isValid) {
+                showToast('Please fix the highlighted fields before submitting.', 'error');
+                return;
+            }
+
+            // Show Success Confirmation Banner & Toast
+            const form = document.getElementById('inquiry-form');
+            const successBanner = document.getElementById('form-success-banner');
+            const successText = document.getElementById('form-success-text');
+
+            successText.textContent = `Thank you, ${nameInput.value.trim()}! We have received your inquiry regarding ${serviceInput.value}. Our team will contact you shortly at ${phoneInput.value.trim()} or ${emailInput.value.trim()}.`;
+
+            form.classList.add('hidden');
+            successBanner.classList.remove('hidden');
+
+            showToast('Inquiry submitted to Jagat Software Solutions!', 'success');
+        }
+
+        // Reset Inquiry Form
+        function resetInquiryForm() {
+            const form = document.getElementById('inquiry-form');
+            const successBanner = document.getElementById('form-success-banner');
+            form.reset();
+            successBanner.classList.add('hidden');
+            form.classList.remove('hidden');
+        }
+
+        // Copy Contact Info to Clipboard (iFrame safe fallback)
+        function copyContactDetails() {
+            const textToCopy = "Jagat Software Solutions\nPhone: +91 8376856686\nEmail: ravioecdumri@gmail.com\nAddress: Bypass Road, Opposite KB High School Ground, Dumri, Jharkhand";
+            const tempInput = document.createElement('textarea');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            try {
+                document.execCommand('copy');
+                showToast('Contact details copied to clipboard!', 'success');
+            } catch (err) {
+                showToast('Unable to copy automatically.', 'error');
+            }
+            document.body.removeChild(tempInput);
+        }
+
+        // Custom Non-Blocking Toast Notification
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            const bgClass = type === 'error'
+                ? 'bg-red-600 text-white'
+                : type === 'info'
+                    ? 'bg-slate-900 text-white'
+                    : 'bg-emerald-600 text-white';
+
+            toast.className = `${bgClass} px-4 py-3 rounded-xl shadow-lg text-sm font-medium flex items-center gap-2.5 transform transition-all duration-300 translate-y-2 opacity-0 pointer-events-auto max-w-sm`;
+            toast.innerHTML = `<span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            // Trigger entrance animation
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+
+            // Auto remove after 3.5 seconds
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Initialize Application on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+            filterServiceTab('All');
+            navigateTo('home');
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>
